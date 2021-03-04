@@ -124,7 +124,7 @@ def get_math(PMMD,numver):
   elif PMMD == "divided":
     math = number / float(txtBox.get())
 
-  if math - int(math) == 0 :#小数点以下が0の場合intで表示
+  if math - int(math) == 0 :#小数点以下が0の場合intで表示suru
     return int(math)
   else :
     return math
