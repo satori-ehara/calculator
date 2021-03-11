@@ -10,6 +10,7 @@ cnt = 1
 number = 0
 number_dash = 0
 PMMD = "no"
+ins = "notin"
 
 def check_state():
   global state
@@ -23,12 +24,22 @@ def output_number(number):
   txtBox.insert(tkinter.END,number)
   txtBox.configure(state='readonly')
 
+def init_allbtn():
+  global ins
+  plus.config(bg="WhiteSmoke")
+  minus.config(bg="WhiteSmoke")
+  multiplied.config(bg="WhiteSmoke")
+  divided.config(bg="WhiteSmoke")
+  ins = "notin"
+
+
 # click時のイベント
 def btn_click(event):
   str = event.widget["text"]
   print(str)
   txtBox.configure(state='normal')
-  global PMMD
+  global PMMD,ins
+  ins = "in"
 
   if float(txtBox.get()) == 0 : # 表示盤面が0の時は0を削除して押されたボタンの数字を表示
     if "." in txtBox.get() : #0でも 0. となっている場合は削除せず。
@@ -43,10 +54,13 @@ def btn_click(event):
   print(float(txtBox.get()))
 
 def btn_c(event):
+  global number
+  number = 0
   txtBox.configure(state='normal')
   txtBox.delete(0, tkinter.END)
   txtBox.insert(tkinter.END,0)
   txtBox.configure(state='readonly')
+  init_allbtn()
 
 def btn_dt(event):
   txtBox.configure(state='normal')
@@ -59,6 +73,8 @@ def btn_dt(event):
 def btn_plus(event):
   print("push plus")
   global PMMD,state,number
+  init_allbtn()
+  event.widget.config(bg="wheat")
   if PMMD != "no": #四則演算中であれば計算結果を算出
     number = get_math(PMMD,number)
     output_number(number)
@@ -71,6 +87,8 @@ def btn_plus(event):
 
 def btn_minus(event):
   global PMMD,state,number
+  init_allbtn()
+  event.widget.config(bg="wheat")
   if PMMD != "no": #四則演算中であれば計算結果を算出
     number = get_math(PMMD,number)
     output_number(number)
@@ -82,6 +100,8 @@ def btn_minus(event):
 
 def btn_multiplied(event):
   global PMMD,state,number
+  init_allbtn()
+  event.widget.config(bg="wheat")
   if PMMD != "no": #四則演算中であれば計算結果を算出
     number = get_math(PMMD,number)
     output_number(number)
@@ -93,6 +113,8 @@ def btn_multiplied(event):
 
 def btn_divided(event):
   global PMMD,state,number
+  init_allbtn()
+  event.widget.config(bg="wheat")
   if PMMD != "no": #四則演算中であれば計算結果を算出
     number = get_math(PMMD,number)
     output_number(number)
@@ -104,16 +126,18 @@ def btn_divided(event):
 
 def btn_equal(event):
   global PMMD,number
-  print("push equal")
   if PMMD != "no" : #四則演算中であれば計算結果を算出
     number = get_math(PMMD,number)
-  
-  print(number)
+
+  init_allbtn()
   output_number(number)
   PMMD = "no"
 
-def get_math(PMMD,numver):
+def get_math(PMMD,number):
   print("状態は" + PMMD)
+  global ins
+  if(ins == "notin"):
+    return number
   math = 0
   if PMMD == "plus":
     math = number + float(txtBox.get())
@@ -135,7 +159,7 @@ def get_math(PMMD,numver):
 # 画面作成
 tki = tkinter.Tk()
 tki.geometry('220x200') # 画面サイズの設定
-tki.title('電卓テスト') # 画面タイトルの設定
+tki.title('電卓') # 画面タイトルの設定
 
 txtBox = tkinter.Entry(justify='right')
 txtBox.configure(state='readonly', width=26)
@@ -166,21 +190,21 @@ btn = tkinter.Button(tki, text=".",width=3) #.ボタン
 btn.bind("<1>",btn_dt)
 btn.place(x=number_X+80, y=number_Y+90) #ボタンを配置する位置の設定
 
-btn = tkinter.Button(tki, text="+",width=3) # ＋ボタン
-btn.bind("<1>",btn_plus)
-btn.place(x=number_X+120, y=number_Y-30) #ボタンを配置する位置の設定
+plus = tkinter.Button(tki, text="+",width=3) # ＋ボタン
+plus.bind("<1>",btn_plus)
+plus.place(x=number_X+120, y=number_Y-30) #ボタンを配置する位置の設定
 
-btn = tkinter.Button(tki, text="-",width=3) # ―ボタン
-btn.bind("<1>",btn_minus)
-btn.place(x=number_X+120, y=number_Y) #ボタンを配置する位置の設定
+minus = tkinter.Button(tki, text="-",width=3) # ―ボタン
+minus.bind("<1>",btn_minus)
+minus.place(x=number_X+120, y=number_Y) #ボタンを配置する位置の設定
 
-btn = tkinter.Button(tki, text="×",width=3) # ×ボタン
-btn.bind("<1>",btn_multiplied)
-btn.place(x=number_X+120, y=number_Y+30) #ボタンを配置する位置の設定
+multiplied = tkinter.Button(tki, text="×",width=3) # ×ボタン
+multiplied.bind("<1>",btn_multiplied)
+multiplied.place(x=number_X+120, y=number_Y+30) #ボタンを配置する位置の設定
 
-btn = tkinter.Button(tki, text="÷",width=3) # ÷ボタン
-btn.bind("<1>",btn_divided)
-btn.place(x=number_X+120, y=number_Y+60) #ボタンを配置する位置の設定
+divided = tkinter.Button(tki, text="÷",width=3) # ÷ボタン
+divided.bind("<1>",btn_divided)
+divided.place(x=number_X+120, y=number_Y+60) #ボタンを配置する位置の設定
 
 btn = tkinter.Button(tki, text="＝",width=3) # =ボタン
 btn.bind("<1>",btn_equal)
