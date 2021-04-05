@@ -1,4 +1,4 @@
-# calculator# Name
+# Name
  
 計算機アプリ
  
